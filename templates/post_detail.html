@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} - std_dllms{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2rem;">
+    <a href="{{ url_for('blog') }}" style="color: var(--accent); text-decoration: none;">
+        <i class="fas fa-arrow-left"></i> 回到博客
+    </a>
+</div>
+
+<article class="post">
+    <div class="post-header">
+        <div>
+            <h1 class="post-title" style="font-size: 2.2rem;">{{ post.title }}</h1>
+            <div class="post-meta">
+                由 <strong>{{ post.author.username }}</strong> 發表於 
+                {{ post.created_at.strftime('%Y年%m月%d日 %H:%M') }}
+            </div>
+        </div>
+        {% if session.user_id == post.user_id %}
+            <div class="post-actions">
+                <a href="{{ url_for('delete_post', post_id=post.id) }}" 
+                   class="btn btn-secondary" 
+                   onclick="return confirm('確定要刪除這篇文章嗎？')">
+                    <i class="fas fa-trash"></i> 刪除文章
+                </a>
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="post-content" style="white-space: pre-line; font-size: 1.1rem; line-height: 1.8;">
+        {{ post.content }}
+    </div>
+</article>
+
+<!-- 留言區域 -->
+<div class="card">
+    <h3 style="margin-bottom: 1.5rem; color: var(--accent);">
+        <i class="fas fa-comments"></i> 留言 ({{ comments|length }})
+    </h3>
+    
+    <!-- 新增留言表單 -->
+    <form method="POST" action="{{ url_for('add_comment', post_id=post.id) }}" style="margin-bottom: 2rem;">
+        <div class="form-group">
+            <label for="author_name">暱稱（可選，留空為匿名）</label>
+            <input type="text" id="author_name" name="author_name" placeholder="輸入你的暱稱或留空為匿名...">
+        </div>
+        
+        <div class="form-group">
+            <label for="content">留言內容</label>
+            <textarea id="content" name="content" required placeholder="寫下你的留言..." style="min-height: 100px;"></textarea>
+        </div>
+        
+        <button type="submit" class="btn">
+            <i class="fas fa-comment"></i> 發表留言
+        </button>
+    </form>
+    
+    <!-- 顯示留言 -->
+    {% if comments %}
+        <div style="border-top: 1px solid var(--border); padding-top: 2rem;">
+            {% for comment in comments %}
+                <div class="comment">
+                    <div class="comment-header">
+                        <span class="comment-author">
+                            <i class="fas fa-user"></i> {{ comment.author_name }}
+                        </span>
+                        <span class="comment-date">
+                            {{ comment.created_at.strftime('%Y年%m月%d日 %H:%M') }}
+                        </span>
+                    </div>
+                    <div style="white-space: pre-line;">{{ comment.content }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 2rem; color: var(--text-secondary); border-top: 1px solid var(--border);">
+            <i class="fas fa-comment-slash" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+            <p>還沒有留言，成為第一個留言的人吧！</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}發表文章 - std_dllms{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <div class="card">
+        <h1 style="margin-bottom: 2rem; color: var(--accent);">
+            <i class="fas fa-edit"></i> 發表新文章
+        </h1>
+        
+        <form method="POST">
+            <div class="form-group">
+                <label for="title">文章標題</label>
+                <input type="text" id="title" name="title" required placeholder="輸入文章標題...">
+            </div>
+            
+            <div class="form-group">
+                <label for="content">文章內容</label>
+                <textarea id="content" name="content" required placeholder="寫下你的想法..."></textarea>
+            </div>
+            
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn">
+                    <i class="fas fa-paper-plane"></i> 發表文章
+                </button>
+                <a href="{{ url_for('blog') }}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> 取消
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
