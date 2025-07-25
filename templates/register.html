@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}註冊 - std_dllms{% endblock %}
+
+{% block content %}
+<div style="max-width: 400px; margin: 2rem auto;">
+    <div class="card">        <h1 style="text-align: center; margin-bottom: 2rem; color: var(--accent);">
+            <i class="fas fa-user-plus"></i> 註冊
+        </h1>
+        
+        <div style="background: rgba(255, 193, 7, 0.1); border: 1px solid #ffc107; color: #ffc107; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; text-align: center;">
+            <i class="fas fa-key"></i> 註冊需要有效的密鑰
+        </div>
+        
+        <form method="POST">
+            <div class="form-group">
+                <label for="registration_key">註冊密鑰 *</label>
+                <input type="password" id="registration_key" name="registration_key" required placeholder="請輸入註冊密鑰">
+                <small style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem; display: block;">
+                    請聯繫管理員獲取註冊密鑰
+                </small>
+            </div>
+            
+            <div class="form-group">
+                <label for="username">用戶名 *</label>
+                <input type="text" id="username" name="username" required placeholder="輸入用戶名">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">密碼 *</label>
+                <input type="password" id="password" name="password" required placeholder="輸入密碼">
+            </div>
+            
+            <button type="submit" class="btn" style="width: 100%; margin-bottom: 1rem;">
+                <i class="fas fa-user-plus"></i> 註冊
+            </button>
+        </form>
+        
+        <div style="text-align: center; padding-top: 1rem; border-top: 1px solid var(--border);">
+            <p style="color: var(--text-secondary);">
+                已有帳號？ <a href="{{ url_for('login') }}" style="color: var(--accent);">登入</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

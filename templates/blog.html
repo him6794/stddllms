@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}blog - std_dllms{% endblock %}
+
+{% block content %}
+<style>
+    .post {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        transition: var(--transition);
+    }
+
+    [data-theme="light"] .post {
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+    }
+
+    .post:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .post-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .post-title {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+    }
+
+    .post-title a {
+        color: var(--accent);
+        text-decoration: none;
+        transition: var(--transition);
+    }
+
+    .post-title a:hover {
+        color: var(--secondary);
+    }
+
+    .post-meta {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .post-content {
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+
+    .post-actions {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    @media (max-width: 768px) {
+        .post {
+            padding: 1.5rem;
+        }
+        
+        .post-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .post-title {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1 style="color: var(--accent); font-size: 2.5rem;">std_dllms blog</h1>
+    {% if session.username %}
+        <a href="{{ url_for('create_post') }}" class="btn">
+            <i class="fas fa-plus"></i> 發表新文章
+        </a>
+    {% endif %}
+</div>
+
+{% if posts %}
+    {% for post in posts %}
+        <div class="post">
+            <div class="post-header">
+                <div>
+                    <h2 class="post-title">
+                        <a href="{{ url_for('view_post', post_id=post.id) }}">
+                            {{ post.title }}
+                        </a>
+                    </h2>
+                    <div class="post-meta">
+                        由 <strong>{{ post.author.username }}</strong> 發表於 
+                        {{ post.created_at.strftime('%Y年%m月%d日 %H:%M') }}
+                    </div>
+                </div>
+                {% if session.user_id == post.user_id %}
+                    <div class="post-actions">
+                        <a href="{{ url_for('delete_post', post_id=post.id) }}" 
+                           class="btn btn-secondary" 
+                           onclick="return confirm('確定要刪除這篇文章嗎？')">
+                            <i class="fas fa-trash"></i> 刪除
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="post-content">
+                {{ post.content[:200] }}
+                {% if post.content|length > 200 %}...{% endif %}
+            </div>
+            
+            <div style="margin-top: 1rem;">
+                <a href="{{ url_for('view_post', post_id=post.id) }}" class="btn">
+                    閱讀全文 <i class="fas fa-arrow-right"></i>
+                </a>
+                <span style="margin-left: 1rem; color: var(--text-secondary);">
+                    <i class="fas fa-comment"></i> {{ post.comments|length }} 則留言
+                </span>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="card" style="text-align: center; padding: 3rem;">
+        <i class="fas fa-blog" style="font-size: 4rem; color: var(--accent); margin-bottom: 1rem;"></i>
+        <h2 style="margin-bottom: 1rem;">還沒有文章</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+            成為第一個發表文章的人吧！
+        </p>
+        {% if session.username %}
+            <a href="{{ url_for('create_post') }}" class="btn">
+                <i class="fas fa-plus"></i> 發表第一篇文章
+            </a>
+        {% else %}
+            <a href="{{ url_for('login') }}" class="btn">
+                <i class="fas fa-sign-in-alt"></i> 登入後發表文章
+            </a>
+        {% endif %}
+    </div>
+{% endif %}
+{% endblock %}

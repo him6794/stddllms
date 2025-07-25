@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>學生技術推廣團隊 | std_dllms</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-primary: #6a11cb;
+            --dark-secondary: #2575fc;
+            --dark-bg: #001225;
+            --dark-bg-lighter: #001a33;
+            --dark-accent: #00d2ff;
+            --dark-light: #f0f8ff;
+            --dark-card-bg: rgba(15, 30, 55, 0.85);
+            --dark-text: #ffffff;
+            --dark-text-secondary: rgba(255, 255, 255, 0.85);
+            --light-primary: #4a00e0;
+            --light-secondary: #2b8cff;
+            --light-bg: #f8f9fa;
+            --light-bg-lighter: #e9ecef;
+            --light-accent: #00b4d8;
+            --light-dark: #212529;
+            --light-card-bg: rgba(255, 255, 255, 0.9);
+            --light-text: #212529;
+            --light-text-secondary: #495057;
+            --primary: var(--dark-primary);
+            --secondary: var(--dark-secondary);
+            --bg: var(--dark-bg);
+            --bg-lighter: var(--dark-bg-lighter);
+            --accent: var(--dark-accent);
+            --light: var(--dark-light);
+            --card-bg: var(--dark-card-bg);
+            --text: var(--dark-text);
+            --text-secondary: var(--dark-text-secondary);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+        
+        [data-theme="light"] {
+            --primary: var(--light-primary);
+            --secondary: var(--light-secondary);
+            --bg: var(--light-bg);
+            --bg-lighter: var(--light-bg-lighter);
+            --accent: var(--light-accent);
+            --light: var(--light-dark);
+            --card-bg: var(--light-card-bg);
+            --text: var(--light-text);
+            --text-secondary: var(--light-text-secondary);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', 'Noto Sans TC', sans-serif;
+            background: linear-gradient(135deg, var(--bg), var(--bg-lighter));
+            color: var(--text);
+            line-height: 1.7;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            transition: background-color 0.5s ease, color 0.3s ease;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(106, 17, 203, 0.15) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(37, 117, 252, 0.15) 0%, transparent 20%),
+                radial-gradient(circle at 50% 30%, rgba(0, 210, 255, 0.1) 0%, transparent 25%);
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.4;
+            will-change: transform;
+        }
+        
+        [data-theme="light"] body::before {
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(106, 17, 203, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(37, 117, 252, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 50% 30%, rgba(0, 210, 255, 0.03) 0%, transparent 25%);
+            opacity: 0.2;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 20, 45, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            will-change: transform;
+        }
+        
+        [data-theme="light"] nav {
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(45deg, var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: none;
+            transition: none;
+        }
+        
+        .logo i {
+            background: linear-gradient(45deg, var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.5rem;
+            filter: none;
+        }
+        
+        .logo span {
+            color: inherit;
+            font-weight: 700;
+            display: inline !important;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: var(--transition);
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: var(--transition);
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .theme-toggle {
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(15deg);
+        }
+        
+        [data-theme="light"] .theme-toggle:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        
+        header {
+            padding: 12rem 0 6rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        
+        header h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 2.2rem;
+            background: linear-gradient(45deg, var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+        
+        .typed-cursor {
+            font-size: 4rem;
+            color: var(--accent);
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2.5rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 15px;
+            min-width: 160px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+            will-change: transform;
+        }
+        
+        [data-theme="light"] .stat-card {
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            border-color: rgba(0, 210, 255, 0.3);
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+        
+        main {
+            padding: 4rem 0;
+            position: relative;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            display: inline-block;
+            background: linear-gradient(45deg, var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            border-radius: 2px;
+        }
+        
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            will-change: transform;
+        }
+        
+        [data-theme="light"] .card {
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border-color: rgba(0, 210, 255, 0.3);
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+        }
+        
+        .card-content {
+            padding: 2rem;
+        }
+        
+        .card h3 {
+            font-size: 1.7rem;
+            margin-bottom: 1.2rem;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card h3 i {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.5rem;
+        }
+        
+        .card p {
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+        }
+        
+        .social-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 1.2rem;
+        }
+        
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.9rem 1.2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text);
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            will-change: transform;
+        }
+        
+        [data-theme="light"] .social-link {
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .social-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(10px);
+            border-color: rgba(0, 210, 255, 0.3);
+        }
+        
+        [data-theme="light"] .social-link:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        
+        .social-link i {
+            font-size: 1.3rem;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            color: white;
+        }
+        
+        .discord i {
+            background: linear-gradient(45deg, #5865F2, #7289DA);
+        }
+        
+        .instagram i {
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        }
+        
+        .threads i {
+            background: linear-gradient(45deg, #000000, #545454);
+        }
+        
+        footer {
+            background: rgba(0, 15, 35, 0.95);
+            padding: 3rem 0 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 4rem;
+        }
+        
+        [data-theme="light"] footer {
+            background: rgba(255, 255, 255, 0.95);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-section {
+            position: relative;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1.2rem;
+            color: var(--accent);
+        }
+        
+        .footer-section p {
+            color: var(--text-secondary);
+            margin-bottom: 1.2rem;
+            font-size: 0.95rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent);
+            transform: translateX(5px);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        [data-theme="light"] .footer-bottom {
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .floating {
+            animation: float 5s ease-in-out infinite;
+            will-change: transform;
+        }
+        
+        .delay-1 {
+            animation-delay: 0.4s;
+        }
+        
+        .delay-2 {
+            animation-delay: 0.8s;
+        }
+        
+        @media (max-width: 992px) {
+            header h1 {
+                font-size: 3.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.3rem;
+            }
+            
+            .stats {
+                gap: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                gap: 1.2rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            header {
+                padding: 10rem 0 4rem;
+            }
+            
+            header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .stat-card {
+                min-width: 140px;
+                padding: 1rem;
+            }
+            
+            .stat-value {
+                font-size: 2rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .card-content {
+                padding: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .nav-container {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0.5rem 0.7rem 0.3rem 0.7rem;
+                position: relative;
+            }
+            .logo {
+                margin-bottom: 0;
+                font-size: 1.1rem;
+                gap: 0.3rem;
+                filter: none;
+                cursor: pointer; /* 添加指針游標 */
+            }
+            .hamburger {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                width: 36px;
+                height: 36px;
+                cursor: pointer;
+                z-index: 1100;
+                background: none;
+                border: none;
+                margin-left: 0.5rem;
+            }
+            .hamburger span {
+                display: block;
+                height: 4px;
+                width: 24px;
+                background: var(--accent);
+                margin: 3px 0;
+                border-radius: 2px;
+                transition: 0.3s;
+            }
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--bg);
+                flex-direction: column;
+                align-items: flex-start;
+                width: 100vw;
+                gap: 0.6rem;
+                padding: 0.7rem 1rem 0.7rem 1rem;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+                display: none;
+                border-bottom-left-radius: 12px;
+                border-bottom-right-radius: 12px;
+            }
+            .nav-links.open {
+                display: flex;
+            }
+            .theme-toggle {
+                margin-left: 0.2rem;
+            }
+            header {
+                padding: 6rem 0 1.5rem;
+            }
+            header h1 {
+                font-size: 1.7rem;
+            }
+            .subtitle {
+                display: none;
+            }
+            .stats {
+                gap: 0.6rem;
+            }
+            .stat-card {
+                min-width: 100px;
+                padding: 0.9rem;
+            }
+            .stat-value {
+                font-size: 1.5rem;
+            }
+            .stat-label {
+                font-size: 0.95rem;
+            }
+            .cards-container {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            .card h3 {
+                font-size: 1.2rem;
+            }
+            .section-title h2 {
+                font-size: 1.3rem;
+            }
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+        }
+
+        .hamburger { display: none; }
+        @media (max-width: 480px) {
+            .hamburger { display: flex; }
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .card:hover {
+                transform: translateY(-15px);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+                border-color: rgba(0, 210, 255, 0.3);
+            }
+        }
+        @media (hover: none) and (pointer: coarse) {
+            .card:hover {
+                transform: none;
+                box-shadow: none;
+                border-color: inherit;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-section:not(:last-child) {
+                border-bottom: 1px solid var(--bg-lighter);
+                margin-bottom: 1.2rem;
+                padding-bottom: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container nav-container">
+            <a href="{{ url_for('index') }}" class="logo" id="logo">
+                <span>std_dllms</span>
+            </a>            <button class="hamburger" id="hamburger" aria-label="展開選單">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <div class="nav-links" id="nav-links">
+                <a href="#about"><i class="fas fa-users"></i> 關於我們</a>
+                <a href="#community"><i class="fas fa-hashtag"></i> 社群連結</a>
+                <a href="{{ url_for('blog') }}"><i class="fas fa-blog"></i> blog</a>
+                <button id="theme-toggle" class="theme-toggle" aria-label="切換主題">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <header>
+        <div class="container header-content">
+            <h1>
+                <span id="team-name">std_dllms</span><span class="typed-cursor">|</span>
+            </h1>
+            <p class="subtitle">我們是由學生組成的 AI 技術推廣團隊，致力於大型語言模型（LLM）研究、教學與推廣，推動學生主導的技術革命</p>
+            
+            <div class="stats">
+                <div class="stat-card floating">
+                    <div class="stat-value">100+</div>
+                    <div class="stat-label">threads 粉絲</div>
+                </div>
+                <div class="stat-card floating delay-1">
+                    <div class="stat-value">9,000+</div>
+                    <div class="stat-label">總瀏覽量</div>
+                </div>
+                <div class="stat-card floating delay-2">
+                    <div class="stat-value">2</div>
+                    <div class="stat-label">社群平台</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="section-title">
+                <h2>我們的使命</h2>
+            </div>
+            
+            <div class="cards-container">
+                <section id="about" class="card">
+                    <div class="card-content">
+                        <h3><i class="fas fa-lightbulb"></i> 關於我們</h3>
+                        <p>我們是一個由學生組成的技術推廣團隊，目前致力於 AI 應用教學推廣，以及大型語言模型（LLM）與其延伸架構的研究與教學。</p>
+                        <p>我們的目標不只是理解技術，更希望推動由學生主導的技術推廣運動，讓更多年輕人參與到 AI 技術的創新與應用中來。</p>
+                    </div>
+                </section>
+                
+                <section id="community" class="card">
+                    <div class="card-content">
+                        <h3><i class="fas fa-share-alt"></i> 社群連結</h3>
+                        <p>我們的 threads 帳號在創立第二天即突破 100 粉絲，總瀏覽數在經營四天內已突破 9,000。我們致力於分享高品質的 AI 技術內容，吸引真正對 AI 有興趣的學生與讀者。</p>
+                        
+                        <div class="social-links">
+                            <a href="https://discord.gg/N8CsqzZ8" target="_blank" class="social-link discord">
+                                <i class="fab fa-discord"></i>
+                                <div>
+                                    <strong>Discord 社群</strong>
+                                    <div>加入我們的技術討論社群</div>
+                                </div>
+                            </a>
+                            <a href="https://www.instagram.com/std_dllm_?igsh=eXRpbWttb21uNmUz" target="_blank" class="social-link instagram">
+                                <i class="fab fa-instagram"></i>
+                                <div>
+                                    <strong>Instagram</strong>
+                                    <div>關注我們的最新動態</div>
+                                </div>
+                            </a>
+                            <a href="https://www.threads.net/@std_dllm_" target="_blank" class="social-link threads">
+                                <i class="fab fa-threads"></i>
+                                <div>
+                                    <strong>Threads</strong>
+                                    <div>深入的技術討論</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+                
+                <section id="collaboration" class="card">
+                    <div class="card-content">
+                        <h3><i class="fas fa-handshake"></i> 合作計畫</h3>
+                        <p>我們正與另一個學生 AI 社群 SCoML 合作，籌備線上講座並已開始製作簡報。透過合作，我們希望整合資源，為 AI 愛好者提供更豐富的內容和活動。</p>
+                        <p>我們歡迎教育機構、技術社群和學生組織與我們合作，共同推動 AI 技術的普及。如有任何問題，歡迎透過社群平台聯絡我們。</p>
+                        
+                        <div style="margin-top: 1.5rem; background: rgba(0, 210, 255, 0.1); padding: 1.2rem; border-radius: 10px; border: 1px solid rgba(0, 210, 255, 0.3);">
+                            <h4 style="margin-bottom: 0.8rem; color: var(--accent);">合作方向</h4>
+                            <ul style="padding-left: 1.2rem; color: var(--text-secondary);">
+                                <li>學生AI技術講座與工作坊</li>
+                                <li>開源LLM項目協作</li>
+                                <li>高校AI技術推廣活動</li>
+                                <li>AI應用開發合作</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>std_dllms</h3>
+                    <p>學生技術推廣團隊，致力於 AI 與大型語言模型的教學、研究與推廣，推動學生主導的技術革命。</p>
+                    <p>我們相信技術的力量，更相信年輕一代的創新潛力。</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>快速連結</h3>
+                    <div class="footer-links">
+                        <a href="#about"><i class="fas fa-chevron-right"></i> 關於我們</a>
+                        <a href="#community"><i class="fas fa-chevron-right"></i> 社群連結</a>
+                        <a href="#collaboration"><i class="fas fa-chevron-right"></i> 合作計畫</a>
+                        <a href="https://discord.gg/N8CsqzZ8" target="_blank"><i class="fas fa-chevron-right"></i> 加入 Discord</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>聯絡我們</h3>
+                    <div class="footer-links">
+                        <a href="https://discord.gg/N8CsqzZ8" target="_blank">
+                            <i class="fab fa-discord" style="font-size:1.1rem;width:20px;height:20px;"></i> Discord
+                        </a>
+                        <a href="https://www.instagram.com/std_dllm_?igsh=eXRpbWttb21uNmUz" target="_blank">
+                            <i class="fab fa-instagram"></i> Instagram
+                        </a>
+                        <a href="https://www.threads.net/@std_dllm_" target="_blank">
+                            <i class="fab fa-threads"></i> Threads
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; std_dllms <span id="copyright-year"></span>. 保留所有權利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const teamName = document.getElementById('team-name');
+            const text = 'std_dllms';
+            let index = 0;
+            
+            function type() {
+                if (index < text.length) {
+                    teamName.textContent += text.charAt(index);
+                    index++;
+                    setTimeout(type, 150);
+                } else {
+                    document.querySelector('.typed-cursor').style.animation = 'blink 1s infinite';
+                }
+            }
+            
+            teamName.textContent = '';
+            type();
+            
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeIcon = themeToggle.querySelector('i');
+            
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            }
+            
+            themeToggle.addEventListener('click', function() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                
+                if (currentTheme === 'light') {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+            
+            const yearSpan = document.getElementById('copyright-year');
+            if(yearSpan) {
+                yearSpan.textContent = new Date().getFullYear();
+            }
+            
+            const animatedElements = document.querySelectorAll('.card, .stat-card');
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            animatedElements.forEach(function(el) {
+                el.style.opacity = 0;
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+                observer.observe(el);
+            });
+            
+            document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        window.scrollTo({
+                            top: target.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            const hamburger = document.getElementById('hamburger');
+            const navLinks = document.getElementById('nav-links');
+            const logo = document.getElementById('logo');
+            hamburger.addEventListener('click', function(e) {
+                e.preventDefault();
+                navLinks.classList.toggle('open');
+            });
+            navLinks.querySelectorAll('a').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    navLinks.classList.remove('open');
+                });
+            });
+
+            logo.addEventListener('click', function(e) {
+                if(window.innerWidth <= 480) {
+                    if (!logo.classList.contains('show-name')) {
+                        e.preventDefault();
+                        logo.classList.add('show-name');
+                        setTimeout(() => {
+                            logo.classList.remove('show-name');
+                        }, 2000);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
